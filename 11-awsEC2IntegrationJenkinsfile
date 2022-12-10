@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+    stages {
+        stage('GitHub Integration') {
+            steps {
+                // make sure to update the credentialsId as per your own ID name added under Manage Credentials
+                git credentialsId: 'github-creds', url: "git@github.com:VishnuvardhanKrishnan/devops-besant-nov-batch.git", branch: 'main'
+                echo "GitHub Repo Cloned..."
+                sh """
+                    echo "GitHub Listing branches.."
+                    git branch -a
+                    echo "Switching to maven branch..."
+                    git checkout jenkins
+                """
+            }
+        }
+        stage('List the files from GitHub Repo Branch') {
+            steps {
+                // Copying files from the branch
+                echo "Listing the files/directories from GitHub Repo Branch..."
+                sh """
+                    echo "Navigating to the folder"
+                    cd MavenHelloWorldProject
+                    echo "Listing the files/directories"
+                    ls -lrt
+                    cd ..
+                """
+            }
+        }
+        stage('Copying Files to the EC2 instance') {
+            steps {
+                // Copying files from the branch to EC2
+                echo "Intrgating with EC2 instance through SSH agent..."
+                withCredentials([file(credentialsId: 'aws-ec2-key-pair', variable: 'keyFile')]) {
+                    script {
+                        writeFile file: 'devops-training.pem', text: readFile(keyFile)
+                        sh("chmod 400 devops-training.pem")
+                        sh("touch test")
+                        sh("scp -o 'StrictHostKeyChecking no' -i devops-training.pem -pr test ec2-user@3.109.213.192:/tmp/")
+                    }
+                }
+            }
+        }
+    }
+}

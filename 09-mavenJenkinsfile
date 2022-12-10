@@ -1,0 +1,14 @@
+pipeline {
+    agent any
+    stages {
+        stage('Maven Project') {
+            steps {
+                git credentialsId: 'github-creds', url: "git@github.com:VishnuvardhanKrishnan/devops-besant-nov-batch.git", branch: 'jenkins'
+                sh "git checkout maven"
+                dir('MavenHelloWorldProject') {
+                    sh "mvn clean install"
+                }
+            }
+        }
+    }
+}
