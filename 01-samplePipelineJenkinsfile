@@ -6,7 +6,7 @@ pipeline{
                 sh """
                     pwd
                     cd
-                    ls -l
+                    ping www.google.com
                     """
             }
         }

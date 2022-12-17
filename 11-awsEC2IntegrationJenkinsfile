@@ -4,13 +4,13 @@ pipeline {
         stage('GitHub Integration') {
             steps {
                 // make sure to update the credentialsId as per your own ID name added under Manage Credentials
-                git credentialsId: 'github-creds', url: "git@github.com:VishnuvardhanKrishnan/devops-besant-nov-batch.git", branch: 'main'
+                git credentialsId: 'c56e486a-f547-41ad-add8-933df79c1f4e', url: "git@github.com:VishnuvardhanKrishnan/devops-aug-sep-batch.git", branch: 'maven'
                 echo "GitHub Repo Cloned..."
                 sh """
                     echo "GitHub Listing branches.."
                     git branch -a
                     echo "Switching to maven branch..."
-                    git checkout jenkins
+                    git checkout maven
                 """
             }
         }
@@ -33,10 +33,9 @@ pipeline {
                 echo "Intrgating with EC2 instance through SSH agent..."
                 withCredentials([file(credentialsId: 'aws-ec2-key-pair', variable: 'keyFile')]) {
                     script {
-                        writeFile file: 'devops-training.pem', text: readFile(keyFile)
-                        sh("chmod 400 devops-training.pem")
+                        writeFile file: 'private.pem', text: readFile(keyFile)
                         sh("touch test")
-                        sh("scp -o 'StrictHostKeyChecking no' -i devops-training.pem -pr test ec2-user@3.109.213.192:/tmp/")
+                        sh("scp -i private.pem -pr test ec2-user@13.126.121.211:/tmp/")
                     }
                 }
             }

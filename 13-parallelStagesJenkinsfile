@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+    environment {
+        git_push = true
+    }
+    stages {
+        stage('Git Clone') {
+            steps {
+                cleanWs()
+                git credentialsId: 'github-ssh-key', url: "git@github.com:VishnuvardhanKrishnan/devops-aug-sep-batch.git", branch: 'main'
+                sshagent(credentials: ['github-ssh-key']) {
+                    sh """
+                        echo "Workspace is $WORKSPACE"
+                        git clone git@github.com:VishnuvardhanKrishnan/devops-aug-sep-batch.git
+                        git checkout maven
+                    """
+                }
+            }
+        }
+        stage('Parallel Stage') {
+            parallel {
+                stage('Maven Project') {
+                    steps {
+                        dir('MavenHelloWorldProject') {
+                            sh "mvn clean install"
+                        }
+                    }
+                }
+                stage('Git Push') {
+                    when { expression { return git_push } }
+                    steps {
+                        sshagent(credentials: ['github-ssh-key']) {
+                            sh """
+                                git checkout main
+                                git remote add devops git@github.com:VishnuvardhanKrishnan/devops-test.git
+                                git tag -a some_tag -m 'Jenkins'
+                                git pull devops main
+                                git push devops main
+                            """
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+    stages {
+        stage('Git Clone') {
+            steps {
+                cleanWs()
+                git credentialsId: 'github-creds', url: "git@github.com:VishnuvardhanKrishnan/devops-aug-sep-batch.git", branch: 'jenkins'
+                sshagent(credentials: ['github-creds']) {
+                    sh """
+                        echo "Workspace is $WORKSPACE"
+                        git clone git@github.com:VishnuvardhanKrishnan/devops-dec-batch.git
+                    """
+                }
+            }
+        }
+        stage('S3 Copy') {
+            steps {
+                withAWS(credentials: 'aws-creds', region: 'ap-south-1') {
+                    sh 'aws s3 sync MavenHelloWorldProject s3://devops-training-exercise'
+                }
+            }
+        }
+    }
+}
