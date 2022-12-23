@@ -1,0 +1,6 @@
+- hosts: all
+ 
+  tasks:
+  - name: notify
+    become: true
+    command: wall Thank you for attending the class. With love from Vishnu!

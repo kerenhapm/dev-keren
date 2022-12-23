@@ -1,0 +1,70 @@
+$ ansible-galaxy init apache_role
+$ yum install tree -y
+$ tree apache_role
+
+[root@ip-172-31-6-106 ansible-sample-project]# tree apache_role
+apache_role
+├── defaults
+│   └── main.yml
+├── files
+├── handlers
+│   └── main.yml
+├── meta
+│   └── main.yml
+├── README.md
+├── tasks
+│   └── main.yml
+├── templates
+├── tests
+│   ├── inventory
+│   └── test.yml
+└── vars
+    └── main.yml
+
+8 directories, 8 files
+
+## Directory Structure:
+# tasks – contains the main list of tasks to be executed by the role.
+# handlers – contains handlers, which may be used by this role or even anywhere outside this role.
+# defaults – default variables for the role.
+# vars – other variables for the role. Vars has the higher priority than defaults.
+# files – contains files required to transfer or deployed to the target machines via this role.
+# templates – contains templates which can be deployed via this role.
+# meta – defines some data / information about this role (author, dependency, versions, examples, etc,.)
+
+# Navigate to role
+$ cd role
+
+# Structure check
+$ tree apache_role
+[root@ip-172-31-6-106 role]# tree apache_role/
+apache_role/
+├── defaults
+│   └── main.yml
+├── files
+│   └── index.html
+├── handlers
+│   └── main.yml
+├── meta
+│   └── main.yml
+├── README.md
+├── tasks
+│   ├── configure.yml
+│   ├── install.yml
+│   ├── main.yml
+│   └── service.yml
+├── templates
+├── tests
+│   ├── inventory
+│   └── test.yml
+└── vars
+    └── main.yml
+
+8 directories, 12 files
+
+# Syntax check
+$ ansible-playbook run.yml --syntax-check
+
+# Execute Playbook
+$ ansible-playbook run.yml
+

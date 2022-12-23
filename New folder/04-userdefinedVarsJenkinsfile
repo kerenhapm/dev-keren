@@ -1,0 +1,13 @@
+pipeline{
+    agent any
+    environment{
+        MY_HOME="Chennai"
+    }
+    stages{
+        stage('User Defined variable'){
+            steps{
+                echo "User Defined variable value is $MY_HOME "
+            }
+        }
+    }
+}

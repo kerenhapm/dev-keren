@@ -1,0 +1,13 @@
+- hosts: all
+ 
+  tasks:
+  - name : Install multiple Linux packages
+    yum: 
+      name: "{{ item }}"
+      state: latest
+      update_cache: yes
+    loop:
+      - git
+      - wget
+      - unzip
+      - curl

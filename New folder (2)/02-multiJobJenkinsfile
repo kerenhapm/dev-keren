@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+    stages {
+        stage("Build") {
+            parallel{
+                stage('Job1'){
+                    steps{
+                        echo "Steps in Job1"
+                    }
+                }
+                stage('Job2'){
+                    steps{
+                        echo "Steps in Job2"
+
+                        timeout(time: 5, unit: 'SECONDS') {
+                            echo "Timeout completed"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,9 @@
+---
+- hosts: all
+  vars:
+    - username: ec2-user
+    - home: /home/ec2-user   
+  tasks:
+    - name: print variables
+      debug:
+        msg: "Username: {{ username }}, Home dir: {{ home }}"

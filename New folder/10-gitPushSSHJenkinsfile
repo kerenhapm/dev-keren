@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+    stages {
+        stage('Git Push') {
+            steps {
+                git credentialsId: 'github-creds', url: "git@github.com:VishnuvardhanKrishnan/devops-besant-nov-batch.git", branch: 'main'
+                sshagent(credentials: ['github-ssh-key']) {
+                    sh """
+                        echo "Workspace is $WORKSPACE"
+                        git clone git@github.com:VishnuvardhanKrishnan/devops-aug-sep-batch.git
+                        git tag -a some_tag -m 'Jenkins'
+                        git push --tags
+                    """
+                }
+            }
+        }
+    }
+}
+

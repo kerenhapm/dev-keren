@@ -1,0 +1,16 @@
+---
+  - hosts: all
+    become: yes
+    tasks:
+    - name: Copy the script
+      ansible.builtin.template:
+        src: first_script.sh
+        dest: /tmp
+
+    - name: Run Shell Script.
+      shell: sh /tmp/first_script.sh
+
+    - name: Remove Shell Script
+      file:
+        path: /tmp/first_script.sh
+        state: absent

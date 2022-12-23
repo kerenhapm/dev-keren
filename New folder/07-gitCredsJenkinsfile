@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+    stages {
+        stage('Maven Project') {
+            steps {
+                git credentialsId: 'github-creds', url: "git@github.com:VishnuvardhanKrishnan/devops-besant-nov-batch.git", branch: 'main'
+                sh """
+                    git branch -a
+                    git checkout -b branchFromGit
+                    touch test
+                    git add .
+                    git config --global user.email "keyveevee2005@gmail.com"
+                    git config --global user.name "Vishnuvardhan"
+                    git commit -am "New file added"
+                """
+            }
+        }
+    }   
+}

@@ -1,0 +1,11 @@
+---
+- hosts: all
+  vars:
+    - create_user_file: yes
+    - user: ec2-user
+  tasks:
+    - name: create file for user ec2-user
+      file:
+        path: /home/{{ user }}/myfile
+        state: touch
+      when: create_user_file

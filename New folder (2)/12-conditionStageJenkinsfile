@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+    environment {
+        git_push = true
+    }
+    stages {
+        stage('Git Clone') {
+            steps {
+                cleanWs()
+                git credentialsId: 'github-ssh-key', url: "git@github.com:VishnuvardhanKrishnan/devops-aug-sep-batch.git", branch: 'main'
+                sshagent(credentials: ['github-ssh-key']) {
+                    sh """
+                        echo "Workspace is $WORKSPACE"
+                        git clone git@github.com:VishnuvardhanKrishnan/devops-aug-sep-batch.git
+                    """
+                }
+            }
+        }
+        stage('Git Push') {
+            when { 
+              expression { 
+                return git_push 
+              } 
+            }
+            steps {
+                sshagent(credentials: ['github-ssh-key']) {
+                    sh """
+                        touch gitpush.txt
+                        git add .
+                        git commit -am "test git push"
+                        git push origin main
+                    """
+                }
+            }
+        }
+    }
+}

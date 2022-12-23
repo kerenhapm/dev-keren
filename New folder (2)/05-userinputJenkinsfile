@@ -1,0 +1,13 @@
+pipeline{
+    agent any
+    stages{
+        stage('User Input'){
+            steps{
+                input("Approve or Reject the build")
+                script {
+                      echo "This script is approved!"
+                }
+            }
+        }
+    }
+}

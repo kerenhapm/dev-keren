@@ -1,0 +1,28 @@
+// Make sure to install "docker" and "docker pipeline" plugin before running this pipeline
+
+pipeline {
+    agent {
+        docker {
+            image 'maven:3.8.1-adoptopenjdk-11'
+            args '-v /root/.m2:/root/.m2'
+        }
+    }
+    stages {
+        stage('Build') {
+            steps {
+                git credentialsId: 'github-ssh-key', url: "git@github.com:VishnuvardhanKrishnan/devops-aug-sep-batch.git", branch: 'maven'
+                sh "git checkout maven"
+                dir('MavenHelloWorldProject') {
+                    sh "mvn clean install"
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                dir('MavenHelloWorldProject') {
+                    sh "mvn test"
+                }
+            }
+        }
+    }
+}

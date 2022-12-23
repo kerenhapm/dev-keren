@@ -1,0 +1,80 @@
+Documentation:
+==============
+https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html
+https://docs.ansible.com/ansible/2.5/user_guide/intro_adhoc.html
+https://docs.ansible.com/ansible/latest/command_guide/intro_adhoc.html
+https://docs.ansible.com/ansible/latest/reference_appendices/playbooks_keywords.html
+https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html
+https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html
+
+Install Ansible on Amazon Linux / CentOS:
+=========================================
+$ sudo yum install epel-release -y
+$ sudo yum install ansible -y
+(or)
+$ sudo amazon-linux-extras install ansible2 -y
+
+Ansible Configuration:
+======================
+(1) Copy the key-pair pem file to the home path - /root/.ssh (or) /home/ec2-user/.ssh
+(2) chmod 400 /root/.ssh/keypair.pem
+(3) ssh-agent bash
+(4) ssh-add ~/.ssh/keypair.pem
+(5) Verification command:
+    ansible localhost -m ping -e 'ansible_python_interpreter="/usr/bin/env python"'
+(6) Disable host key verification
+(7) Edit /etc/ansible/ansible.cfg
+    [defaults]
+    host_key_checking = False
+
+Adhoc command:
+==============
+Access System Information (Facts) in Ansible Playbooks:
+  ansible all -m setup -u ec2-user
+
+To ensure a package is installed without updating it:
+  ansible all -m ansible.builtin.yum -a "name=python state=present"
+
+Manage users
+  ansible all -m ansible.builtin.user -a "name=foo state=absent"
+
+To transfer a file directly to many servers:
+  ansible all -m copy -a "src=/etc/hosts dest=/tmp/hosts"
+
+The file module allows changing ownership and permissions on files.
+  ansible web -m file -a "dest=/srv/foo/a.txt mode=600"
+
+Playbook details and execution:
+===============================
+01 - Define Tasks in Ansible Playbooks
+  ansible-playbook 01-playbook.yml
+
+02 - Use Variables in Ansible Playbooks
+  ansible-playbook 02-playbook.yml 
+
+03 - Access System Information (Facts) in Ansible Playbooks
+  ansible all -m setup -a "filter=*ipv4*" 
+
+04 - Use Conditionals in Ansible Playbooks
+  ansible-playbook 04-playbook.yml 
+
+05 - Use Conditionals in Ansible Playbooks using register (dynamic variable)
+  ansible-playbook 05-playbook.yml 
+
+06 - Use Loops in Ansible Playbooks
+  ansible-playbook 06-playbook.yml 
+
+07 - Privilege Escalation in Ansible Playbooks
+  ansible-playbook 07-playbook.yml -u ec2-user -K
+
+08 - Update Linux packages
+  ansible-playbook 08-playbook.yml -u root -K
+  
+09 - Install Apache & Using Handlers
+  ansible-playbook 09-playbook.yml
+
+10 - Single shell commands
+  ansible-playbook 10-playbook.yml
+
+11 - Execute shell script
+  ansible-playbook 11-playbook.yml

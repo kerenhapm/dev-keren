@@ -1,0 +1,17 @@
+pipeline {
+    agent any
+    options{
+        timestamps()
+    }
+    triggers{
+        pollSCM('*/2 * * * * ')
+    }
+    stages {
+        stage("Cron Task") {
+            steps {
+                echo "Hey, There!"
+                git credentialsId: 'github-creds', url: "git@github.com:VishnuvardhanKrishnan/devops-besant-nov-batch.git", branch: 'main'
+            }
+        }
+    }
+}
